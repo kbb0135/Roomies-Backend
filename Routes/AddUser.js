@@ -3,6 +3,7 @@ const router = express.Router()
 const authUser = require('firebase/auth')
 const auth = require('../firebase.js')
 const emailPattern = /^[\w.-]+@(gmail\.com|hotmail\.com|yahoo\.com|outlook\.com)$/i;
+const fireDatabase = require('firebase/firestore')
 
 
 router.post("/", async (req, res) => {
@@ -18,9 +19,9 @@ router.post("/", async (req, res) => {
               .then(async (userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                await updateProfile(auth.currentUser, {displayName}); 
+                // await updateProfile(auth.currentUser, {displayName}); 
                 
-                await setDoc(doc(db, "Users", user.uid), {
+                await fireDatabase.setDoc(fireDatabase.doc(auth.db, "Users", user.uid), {
                   FirstName: firstName,
                   LastName: lastName,
                   email: email,
